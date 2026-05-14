@@ -17,6 +17,33 @@
 - `Mirage/encryption/`：字符串与导入处理等基础能力
 - `x64/`：构建产物目录（建议仅私有归档）
 
+### 反作弊视角
+
+`ValUM` 适合作为“用户态行为链 + 可视化链路”的研究对象，用来分析交互层行为与底层采样之间的关系：
+
+- 研究线程调度模式与异常行为节奏
+- 研究 UI/渲染层与数据读取层的耦合点
+- 研究配置、菜单、功能开关对行为特征的影响
+
+### 可能作用与用途（防守用途）
+
+- 建立行为特征库：线程频率、调用密度、界面事件关联
+- 设计多维检测：把 UI 事件、内存访问、线程行为联合评估
+- 做检测压测：模拟不同开关组合下的检测表现
+
+### 核心原理（高层）
+
+1. 采样层：围绕内存访问与对象状态获取构建数据面
+2. 调度层：以线程任务组织采样、计算和渲染节奏
+3. 展示层：通过 overlay 与 UI 控件进行结果表达与交互
+4. 控制层：以配置和功能开关形成可调策略
+
+### 防守研究建议
+
+- 重点监控“稳定高频 + 固定节奏”的线程与访问模式
+- 对 UI 交互和底层访问做相关性建模
+- 对配置切换触发的行为突变建立规则
+
 ### 研究目标
 
 - 研究线程化任务分工与渲染链路组织
@@ -43,6 +70,33 @@ Current structure example:
 - `Mirage/imgui/`: UI and rendering components
 - `Mirage/encryption/`: foundational utilities such as string/import handling
 - `x64/`: build output directory (recommended for private archive only)
+
+### Anti-Cheat Perspective
+
+`ValUM` is a strong target for studying user-mode behavior chains and visualization pipelines, especially the relation between interaction layers and low-level sampling:
+
+- Analyze scheduling patterns and anomalous behavioral cadence
+- Analyze coupling points between UI/render and data-access layers
+- Analyze how config/menu toggles change behavioral signatures
+
+### Potential Value and Use Cases (Defensive)
+
+- Build behavioral feature sets (thread frequency, call density, UI-event correlation)
+- Design multi-dimensional detection combining UI, memory access, and threading
+- Stress-test detection under different toggle combinations
+
+### Core Principles (High Level)
+
+1. Sampling plane for memory access and object-state collection
+2. Scheduling plane coordinating sampling, computation, and rendering cadence
+3. Presentation plane using overlay/UI controls for expression and interaction
+4. Control plane driven by configuration and feature toggles
+
+### Defensive Research Recommendations
+
+- Prioritize stable high-frequency and fixed-cadence thread/access patterns
+- Model correlations between UI actions and low-level access
+- Add rules for behavioral shifts triggered by config changes
 
 ### Research Focus
 
@@ -190,3 +244,4 @@ Ví dụ cấu trúc:
 Dự án chỉ phục vụ nghiên cứu phòng thủ và trao đổi kỹ thuật.
 
 Một số khóa, chứng chỉ, chuỗi thực thi và sản phẩm bypass/injection là thông tin nhạy cảm nên không công khai trên GitHub. Nếu cần trao đổi sâu hơn, vui lòng liên hệ Discord chính thức của chúng tôi.
+
