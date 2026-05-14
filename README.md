@@ -1,12 +1,10 @@
 ﻿# ValUM
 
-## Language / 语言
+## Languages
 
-| Language | Jump |
-| --- | --- |
-| 简体中文 | [查看中文](#中文说明) |
-| English | [View English](#english) |
+[English](#english) · [中文](#中文说明) · 日本語 · 한국어 · Русский · Українська · Tiếng Việt
 
+> 日本語 / 한국어 / Русский / Українська / Tiếng Việt versions: Coming soon.
 ## 中文说明
 
 `ValUM` 是一个以 `Mirage/` 为核心目录的反作弊研究工程样例，项目中包含内存访问、渲染界面、线程调度与功能模块组织等内容。
@@ -56,6 +54,7 @@ Current structure example:
 This project is for defensive research and engineering discussion only, and must not be used for unauthorized purposes.
 
 **Some keys, certificates, executable chains, and bypass/injection deliverables are sensitive and are not suitable for public release on GitHub. If you need deeper discussion, please contact our official Discord.**
+
 
 
 
