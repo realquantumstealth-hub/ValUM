@@ -1,249 +1,345 @@
-﻿# ValUM
+# ValUM
 
 > **Official Forum / 官方论坛**: https://discord.gg/qslab
 
 ## Languages
 
-[English](#en) · [中文](#zh) · [日本語](#ja) · [한국어](#ko) · [Русский](#ru) · [Українська](#uk) · [Tiếng Việt](#vi)
-
-<a id="zh"></a>
-## 中文说明
-
-`ValUM` 是一个以 `Mirage/` 为核心目录的反作弊研究工程样例，项目中包含内存访问、渲染界面、线程调度与功能模块组织等内容。
-
-当前结构示例：
-
-- `Mirage/game/`：游戏数据访问与 SDK 相关逻辑
-- `Mirage/overlay/`：可视化与交互层
-- `Mirage/imgui/`：UI 与渲染组件
-- `Mirage/encryption/`：字符串与导入处理等基础能力
-- `x64/`：构建产物目录（建议仅私有归档）
-
-### 反作弊视角
-
-`ValUM` 适合作为“用户态行为链 + 可视化链路”的研究对象，用来分析交互层行为与底层采样之间的关系：
-
-- 研究线程调度模式与异常行为节奏
-- 研究 UI/渲染层与数据读取层的耦合点
-- 研究配置、菜单、功能开关对行为特征的影响
-
-### 可能作用与用途（防守用途）
-
-- 建立行为特征库：线程频率、调用密度、界面事件关联
-- 设计多维检测：把 UI 事件、内存访问、线程行为联合评估
-- 做检测压测：模拟不同开关组合下的检测表现
-
-### 核心原理（高层）
-
-1. 采样层：围绕内存访问与对象状态获取构建数据面
-2. 调度层：以线程任务组织采样、计算和渲染节奏
-3. 展示层：通过 overlay 与 UI 控件进行结果表达与交互
-4. 控制层：以配置和功能开关形成可调策略
-
-### 防守研究建议
-
-- 重点监控“稳定高频 + 固定节奏”的线程与访问模式
-- 对 UI 交互和底层访问做相关性建模
-- 对配置切换触发的行为突变建立规则
-
-### 研究目标
-
-- 研究线程化任务分工与渲染链路组织
-- 研究内存访问封装与模块边界设计
-- 研究大型头文件资源管理与工程可维护性
-
-### 合规与边界
-
-本项目仅用于防御研究与工程技术交流，不用于未授权用途。
-
-由于部分密钥、证书、可执行链路、绕过/注入成品等属敏感信息不方便在 GitHub 上公开，需要或想交流的同伴可以联系我们官方 Discord 进行深入探讨。
-
----
+[English](#en) · [中文](#zh)
 
 <a id="en"></a>
 ## English
 
-`ValUM` is an anti-cheat research project sample centered around the `Mirage/` directory, covering memory access, overlay/UI rendering, threading, and module organization.
+### Project Overview
 
-Current structure example:
+`ValUM` is a compact Windows C++ project centered on a single primary source root: `Mirage/`.
 
-- `Mirage/game/`: game data access and SDK-related logic
-- `Mirage/overlay/`: visualization and interaction layer
-- `Mirage/imgui/`: UI and rendering components
-- `Mirage/encryption/`: foundational utilities such as string/import handling
-- `x64/`: build output directory (recommended for private archive only)
+The root stays minimal, while the project body, bundled support code, and dependency trees are grouped under `Mirage/`. Local build output also remains close to the source tree.
 
-### Anti-Cheat Perspective
+### What This Project Does
 
-`ValUM` is a strong target for studying user-mode behavior chains and visualization pipelines, especially the relation between interaction layers and low-level sampling:
+At a high level, `ValUM` organizes one native C++ project tree around three main concerns:
 
-- Analyze scheduling patterns and anomalous behavioral cadence
-- Analyze coupling points between UI/render and data-access layers
-- Analyze how config/menu toggles change behavioral signatures
+- runtime-facing logic under `Mirage/game/`
+- overlay and UI-facing code under `Mirage/overlay/` and `Mirage/imgui/`
+- support and dependency code under `Mirage/encryption/`, `Mirage/misc/`, and `Mirage/freetype/`
 
-### Potential Value and Use Cases (Defensive)
+This makes the project useful as a compact example of how to keep:
 
-- Build behavioral feature sets (thread frequency, call density, UI-event correlation)
-- Design multi-dimensional detection combining UI, memory access, and threading
-- Stress-test detection under different toggle combinations
+- logic
+- presentation
+- utility code
+- bundled dependencies
 
-### Core Principles (High Level)
+inside one predictable source root without splitting the repository into many top-level projects.
 
-1. Sampling plane for memory access and object-state collection
-2. Scheduling plane coordinating sampling, computation, and rendering cadence
-3. Presentation plane using overlay/UI controls for expression and interaction
-4. Control plane driven by configuration and feature toggles
+### High-Level Design
 
-### Defensive Research Recommendations
+The project uses a simple layered organization inside one main tree:
 
-- Prioritize stable high-frequency and fixed-cadence thread/access patterns
-- Model correlations between UI actions and low-level access
-- Add rules for behavioral shifts triggered by config changes
+1. `Mirage/game/` holds the main runtime-facing branches
+2. `Mirage/overlay/` holds presentation-facing overlay code
+3. `Mirage/imgui/` provides the immediate-mode UI support layer
+4. `Mirage/encryption/` and `Mirage/misc/` provide support utilities
+5. `Mirage/freetype/` provides bundled dependency support
 
-### Research Focus
+The result is a compact source layout where the whole project can be understood by walking one main directory tree from logic to presentation to support layers.
 
-- Threaded task organization and rendering pipeline structure
-- Memory access abstraction and module boundary design
-- Large-header asset management and maintainability
+### Root Directory Layout
 
-### Compliance & Boundaries
+The repository root contains:
 
-This project is for defensive research and engineering discussion only, and must not be used for unauthorized purposes.
+- `Mirage/`
+- `x64/`
+- `README.md`
 
-Some keys, certificates, executable chains, and bypass/injection deliverables are sensitive and are not suitable for public release on GitHub. For deeper discussion, please contact our official Discord.
+The project body starts inside `Mirage/`.
 
----
+### `Mirage/` Top-Level Layout
 
-<a id="ja"></a>
-## 日本語
+The top-level directories inside `Mirage/` are:
 
-`ValUM` は `Mirage/` を中心に構成されたアンチチート研究プロジェクトです。メモリアクセス、オーバーレイ UI、スレッド管理、機能モジュール構成を含みます。
+- `encryption/`
+- `freetype/`
+- `game/`
+- `imgui/`
+- `misc/`
+- `overlay/`
 
-構成例：
+This single top-level tree defines the whole project structure.
 
-- `Mirage/game/`：ゲームデータアクセスと SDK ロジック
-- `Mirage/overlay/`：可視化・操作レイヤー
-- `Mirage/imgui/`：UI と描画コンポーネント
-- `Mirage/encryption/`：文字列・インポート処理などの基盤機能
-- `x64/`：ビルド成果物（私有アーカイブ推奨）
+### `Mirage/game/`
 
-### 研究目的
+`Mirage/game/` is the main runtime-facing subtree.
 
-- スレッド分担と描画パイプラインの設計研究
-- メモリアクセス抽象化とモジュール境界設計
-- 大規模ヘッダー資産の保守性評価
+Its visible first-level directories are:
 
-### コンプライアンス
+- `memory/`
+- `sdk/`
+- `threads/`
+- `unreal/`
 
-本プロジェクトは防御研究と技術交流のみを目的とします。
+This gives `Mirage/game/` an internal split between:
 
-鍵・証明書・実行チェーン・バイパス/インジェクション成果物などの機微情報は GitHub で公開しません。詳細は公式 Discord へご連絡ください。
+- memory-related code
+- SDK-related code
+- threading-related code
+- the `unreal/` branch
 
----
+### `Mirage/overlay/`
 
-<a id="ko"></a>
-## 한국어
+`Mirage/overlay/` is the overlay-facing subtree.
 
-`ValUM`은 `Mirage/` 디렉터리를 중심으로 구성된 안티치트 연구 프로젝트입니다. 메모리 접근, 오버레이 UI, 스레드 관리, 모듈 구성 등을 포함합니다.
+Its visible first-level directory is:
 
-구성 예시:
+- `menu/`
 
-- `Mirage/game/`: 게임 데이터 접근 및 SDK 로직
-- `Mirage/overlay/`: 시각화/상호작용 계층
-- `Mirage/imgui/`: UI 및 렌더링 컴포넌트
-- `Mirage/encryption/`: 문자열/임포트 처리 등 기반 기능
-- `x64/`: 빌드 산출물 디렉터리(비공개 보관 권장)
+Its visible second-level directory is:
 
-### 연구 목표
+- `menu/blur/`
 
-- 스레드 작업 분리와 렌더링 파이프라인 구조 연구
-- 메모리 접근 추상화 및 모듈 경계 설계
-- 대형 헤더 자산 관리와 유지보수성 연구
+This makes the overlay area more specific than a generic drawing folder. It includes a menu subtree and a deeper `blur/` branch inside that menu area.
 
-### 준수 및 범위
+### `Mirage/imgui/`
 
-본 프로젝트는 방어 연구 및 기술 교류 목적에 한해 사용됩니다.
+`Mirage/imgui/` is the bundled UI/rendering support subtree included directly with the project.
 
-키, 인증서, 실행 체인, 바이패스/인젝션 결과물 등 민감 정보는 GitHub에 공개하지 않습니다. 자세한 논의는 공식 Discord로 문의해 주세요.
+### `Mirage/encryption/`
 
----
+`Mirage/encryption/` is a utility/support subtree kept separate from both the runtime logic area and the rendering/UI area.
 
-<a id="ru"></a>
-## Русский
+### `Mirage/misc/`
 
-`ValUM` — исследовательский anti-cheat проект, построенный вокруг каталога `Mirage/`. Включает доступ к памяти, overlay/UI, управление потоками и организацию модулей.
+`Mirage/misc/` is the general support subtree for code that does not belong to one core branch.
 
-Пример структуры:
+### `Mirage/freetype/`
 
-- `Mirage/game/`: доступ к игровым данным и SDK-логика
-- `Mirage/overlay/`: слой визуализации и взаимодействия
-- `Mirage/imgui/`: UI и компоненты рендеринга
-- `Mirage/encryption/`: базовые утилиты (строки, импорт и т. д.)
-- `x64/`: каталог сборочных артефактов (рекомендуется хранить приватно)
+`Mirage/freetype/` is the bundled font/rendering dependency subtree.
 
-### Цели исследования
+Its visible next-level structure includes:
 
-- Исследование потоковой организации задач и рендер-пайплайна
-- Исследование абстракции доступа к памяти и границ модулей
-- Исследование управляемости крупных header-ресурсов
+- `include/`
+- `win64/`
 
-### Соответствие и ограничения
+Inside `include/`, the visible nested directory includes:
 
-Проект предназначен для defensive-исследований и инженерного обмена.
+- `freetype/`
 
-Ключи, сертификаты, исполняемые цепочки и готовые bypass/injection материалы не публикуются на GitHub. Для детального обсуждения используйте официальный Discord.
+This indicates that the project carries a locally embedded FreeType-style support tree directly in the repository.
 
----
+### Project Organization
 
-<a id="uk"></a>
-## Українська
+The project is easiest to read as one main source root with several functional layers:
 
-`ValUM` — це дослідницький anti-cheat проєкт, побудований навколо каталогу `Mirage/`. Містить доступ до пам’яті, overlay/UI, керування потоками та організацію модулів.
+- `Mirage/game/`: runtime logic
+- `Mirage/overlay/`: overlay presentation
+- `Mirage/imgui/`: UI support
+- `Mirage/encryption/`: utility support
+- `Mirage/misc/`: general helpers
+- `Mirage/freetype/`: bundled dependency support
 
-Приклад структури:
+The single-root layout keeps the project compact and makes navigation predictable.
 
-- `Mirage/game/`: доступ до ігрових даних і SDK-логіка
-- `Mirage/overlay/`: шар візуалізації та взаємодії
-- `Mirage/imgui/`: UI і компоненти рендерингу
-- `Mirage/encryption/`: базові утиліти (рядки, імпорт тощо)
-- `x64/`: каталог артефактів збірки (рекомендовано зберігати приватно)
+### Build and Output Footprint
 
-### Мета дослідження
+The root-level `x64/` directory stores local native build output.
 
-- Дослідження потокової організації задач і рендер-пайплайна
-- Дослідження абстракції доступу до пам’яті й меж модулів
-- Дослідження підтримуваності великих header-ресурсів
+This keeps the project close to a working Windows C++ development tree instead of a source-only snapshot.
 
-### Відповідність і межі
+### Recommended Reading Order
 
-Проєкт призначено для defensive-досліджень та інженерного обміну.
+Recommended reading order:
 
-Ключі, сертифікати, виконувані ланцюги та готові bypass/injection матеріали не публікуються на GitHub. Для детального обговорення використовуйте офіційний Discord.
+1. `Mirage/game/`
+2. `Mirage/game/memory/`
+3. `Mirage/game/sdk/`
+4. `Mirage/game/threads/`
+5. `Mirage/game/unreal/`
+6. `Mirage/overlay/`
+7. `Mirage/overlay/menu/`
+8. `Mirage/overlay/menu/blur/`
+9. `Mirage/imgui/`
+10. `Mirage/encryption/`
+11. `Mirage/misc/`
+12. `Mirage/freetype/`
+13. `Mirage/freetype/include/`
+14. `Mirage/freetype/win64/`
 
----
+### Summary
 
-<a id="vi"></a>
-## Tiếng Việt
+`ValUM` is a compact single-root Windows C++ project with:
 
-`ValUM` là dự án nghiên cứu anti-cheat xoay quanh thư mục `Mirage/`. Bao gồm truy cập bộ nhớ, overlay/UI, điều phối luồng và tổ chức mô-đun.
+- a main project body under `Mirage/`
+- a `game/` subtree split into `memory/`, `sdk/`, `threads/`, and `unreal/`
+- an `overlay/` subtree with `menu/` and `menu/blur/`
+- bundled UI support under `imgui/`
+- bundled dependency support under `freetype/`
+- local native build output under `x64/`
 
-Ví dụ cấu trúc:
+<a id="zh"></a>
+## 中文
 
-- `Mirage/game/`: truy cập dữ liệu game và logic SDK
-- `Mirage/overlay/`: lớp hiển thị và tương tác
-- `Mirage/imgui/`: UI và thành phần render
-- `Mirage/encryption/`: tiện ích nền tảng (chuỗi, import, v.v.)
-- `x64/`: thư mục output build (khuyến nghị lưu trữ riêng tư)
+### 项目概览
 
-### Mục tiêu nghiên cứu
+`ValUM` 是一个以单一主源码根 `Mirage/` 为中心的紧凑型 Windows C++ 项目。
 
-- Nghiên cứu tổ chức tác vụ theo luồng và pipeline render
-- Nghiên cứu trừu tượng hóa truy cập bộ nhớ và ranh giới mô-đun
-- Nghiên cứu khả năng bảo trì với tài nguyên header lớn
+根目录保持简洁，项目主体、内置支持代码和依赖树都集中放在 `Mirage/` 中，本地构建输出也保持在靠近源码的位置。
 
-### Tuân thủ và phạm vi
+### 项目作用
 
-Dự án chỉ phục vụ nghiên cứu phòng thủ và trao đổi kỹ thuật.
+从工程层面看，`ValUM` 把一个原生 C++ 项目树围绕三类主要内容组织起来：
 
-Một số khóa, chứng chỉ, chuỗi thực thi và sản phẩm bypass/injection là thông tin nhạy cảm nên không công khai trên GitHub. Nếu cần trao đổi sâu hơn, vui lòng liên hệ Discord chính thức của chúng tôi.
+- `Mirage/game/` 下的运行时逻辑
+- `Mirage/overlay/` 和 `Mirage/imgui/` 下的 overlay / UI 代码
+- `Mirage/encryption/`、`Mirage/misc/`、`Mirage/freetype/` 下的支持与依赖代码
 
+这种结构适合用来展示，怎样在一个可预测的主源码根里同时放好：
+
+- 逻辑代码
+- 呈现代码
+- 工具代码
+- bundled 依赖
+
+而不把仓库拆成很多互相分离的顶层工程。
+
+### 整体原理
+
+项目在一棵主树内部采用简单的分层组织：
+
+1. `Mirage/game/` 放主要运行时逻辑分支
+2. `Mirage/overlay/` 放面向呈现的 overlay 代码
+3. `Mirage/imgui/` 提供即时模式 UI 支持层
+4. `Mirage/encryption/` 和 `Mirage/misc/` 提供辅助工具
+5. `Mirage/freetype/` 提供 bundled 依赖支持
+
+最终形成的是一套紧凑源码布局，沿着一棵主目录树，就能从逻辑层一路读到呈现层和支持层。
+
+### 根目录结构
+
+仓库根目录包含：
+
+- `Mirage/`
+- `x64/`
+- `README.md`
+
+项目主体从 `Mirage/` 开始。
+
+### `Mirage/` 顶层结构
+
+`Mirage/` 下的顶层目录包括：
+
+- `encryption/`
+- `freetype/`
+- `game/`
+- `imgui/`
+- `misc/`
+- `overlay/`
+
+整个项目结构都由这一棵主树定义。
+
+### `Mirage/game/`
+
+`Mirage/game/` 是主要的运行时逻辑子树。
+
+其可见一级目录包括：
+
+- `memory/`
+- `sdk/`
+- `threads/`
+- `unreal/`
+
+因此 `Mirage/game/` 内部继续拆分为：
+
+- 内存相关代码
+- SDK 相关代码
+- 线程相关代码
+- `unreal/` 分支
+
+### `Mirage/overlay/`
+
+`Mirage/overlay/` 是 overlay 呈现子树。
+
+其可见一级目录为：
+
+- `menu/`
+
+其可见二级目录为：
+
+- `menu/blur/`
+
+因此 overlay 区域不仅仅是一个泛化绘制目录，还包含菜单子树以及菜单内部更深一层的 `blur/` 分支。
+
+### `Mirage/imgui/`
+
+`Mirage/imgui/` 是直接随项目内置的 UI / 渲染支持子树。
+
+### `Mirage/encryption/`
+
+`Mirage/encryption/` 是工具/支持子树，并且与运行时逻辑区和渲染/UI 区分开。
+
+### `Mirage/misc/`
+
+`Mirage/misc/` 是通用支持子树，用于放置不属于某个核心分支的辅助代码。
+
+### `Mirage/freetype/`
+
+`Mirage/freetype/` 是内置的字体/渲染依赖子树。
+
+其可见下一层结构包括：
+
+- `include/`
+- `win64/`
+
+在 `include/` 内部，可见的嵌套目录包括：
+
+- `freetype/`
+
+这说明项目把 FreeType 风格的支持树直接放进了仓库。
+
+### 项目组织方式
+
+整个项目最适合按“一棵主树 + 多个功能层”来理解：
+
+- `Mirage/game/`：运行时逻辑
+- `Mirage/overlay/`：overlay 呈现
+- `Mirage/imgui/`：UI 支持
+- `Mirage/encryption/`：工具支持
+- `Mirage/misc/`：通用辅助
+- `Mirage/freetype/`：内置依赖支持
+
+单主树布局让整个项目保持紧凑，也让导航方式更稳定。
+
+### 构建与输出痕迹
+
+根目录中的 `x64/` 用于保存本地原生构建输出。
+
+这让项目保持了真实 Windows C++ 开发工作树的形态，而不是只保留源码的快照。
+
+### 阅读建议
+
+推荐按下面顺序阅读：
+
+1. `Mirage/game/`
+2. `Mirage/game/memory/`
+3. `Mirage/game/sdk/`
+4. `Mirage/game/threads/`
+5. `Mirage/game/unreal/`
+6. `Mirage/overlay/`
+7. `Mirage/overlay/menu/`
+8. `Mirage/overlay/menu/blur/`
+9. `Mirage/imgui/`
+10. `Mirage/encryption/`
+11. `Mirage/misc/`
+12. `Mirage/freetype/`
+13. `Mirage/freetype/include/`
+14. `Mirage/freetype/win64/`
+
+### 总结
+
+`ValUM` 是一个紧凑的单主树 Windows C++ 项目，包含：
+
+- 位于 `Mirage/` 下的主项目主体
+- 拆分为 `memory/`、`sdk/`、`threads/`、`unreal/` 的 `game/` 子树
+- 包含 `menu/` 与 `menu/blur/` 的 `overlay/` 子树
+- 位于 `imgui/` 的内置 UI 支持
+- 位于 `freetype/` 的内置依赖支持
+- 位于 `x64/` 的本地原生构建输出
