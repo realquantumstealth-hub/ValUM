@@ -1,4 +1,4 @@
-# ValUM
+# VGK-Valorant
 
 > **Official Forum / 官方论坛**: https://discord.gg/qslab
 
@@ -11,13 +11,13 @@
 
 ### Project Overview
 
-`ValUM` is a compact Windows C++ project centered on a single primary source root: `Mirage/`.
+`VGK-Valorant` is a compact Windows C++ project centered on a single primary source root: `Mirage/`.
 
 The root stays minimal, while the project body, bundled support code, and dependency trees are grouped under `Mirage/`. Local build output also remains close to the source tree.
 
 ### What This Project Does
 
-At a high level, `ValUM` organizes one native C++ project tree around three main concerns:
+At a high level, `VGK-Valorant` organizes one native C++ project tree around three main concerns:
 
 - runtime-facing logic under `Mirage/game/`
 - overlay and UI-facing code under `Mirage/overlay/` and `Mirage/imgui/`
@@ -166,7 +166,7 @@ Recommended reading order:
 
 ### Summary
 
-`ValUM` is a compact single-root Windows C++ project with:
+`VGK-Valorant` is a compact single-root Windows C++ project with:
 
 - a main project body under `Mirage/`
 - a `game/` subtree split into `memory/`, `sdk/`, `threads/`, and `unreal/`
@@ -180,13 +180,13 @@ Recommended reading order:
 
 ### 项目概览
 
-`ValUM` 是一个以单一主源码根 `Mirage/` 为中心的紧凑型 Windows C++ 项目。
+`VGK-Valorant` 是一个以单一主源码根 `Mirage/` 为中心的紧凑型 Windows C++ 项目。
 
 根目录保持简洁，项目主体、内置支持代码和依赖树都集中放在 `Mirage/` 中，本地构建输出也保持在靠近源码的位置。
 
 ### 项目作用
 
-从工程层面看，`ValUM` 把一个原生 C++ 项目树围绕三类主要内容组织起来：
+从工程层面看，`VGK-Valorant` 把一个原生 C++ 项目树围绕三类主要内容组织起来：
 
 - `Mirage/game/` 下的运行时逻辑
 - `Mirage/overlay/` 和 `Mirage/imgui/` 下的 overlay / UI 代码
@@ -335,7 +335,7 @@ Recommended reading order:
 
 ### 总结
 
-`ValUM` 是一个紧凑的单主树 Windows C++ 项目，包含：
+`VGK-Valorant` 是一个紧凑的单主树 Windows C++ 项目，包含：
 
 - 位于 `Mirage/` 下的主项目主体
 - 拆分为 `memory/`、`sdk/`、`threads/`、`unreal/` 的 `game/` 子树
